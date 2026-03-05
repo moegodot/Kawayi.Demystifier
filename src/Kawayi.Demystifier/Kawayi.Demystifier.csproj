@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <Product>Kawayi.Demystifier</Product>
+        <Title>Kawayi.Demystifier</Title>
+        <RepositoryUrl>https://github.com/moegodot/Kawayi.Demystifier</RepositoryUrl>
+
+        <Version>1.0.0</Version>
+
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+
+        <!-- 发布仓库 URL 到 NuGet 包中 -->
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+
+        <!-- 将未跟踪的源文件嵌入到 PDB -->
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+        <!-- 生成符号包 (.snupkg) -->
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+        <!-- 确定性构建,用于 CI/CD -->
+        <Deterministic>true</Deterministic>
+
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.Reflection.Metadata">
+            <Version>9.0.10</Version>
+        </PackageReference>
+        <PackageReference Include="ZString" Version="2.6.0" />
+    </ItemGroup>
+
+</Project>
