@@ -1,19 +1,18 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Pillar.Demystifier;
-using System.Collections.Generic.Enumerable;
 using System.Reflection;
 using System.Text;
+using Kawayi.Demystifier.Enumerable;
 
-namespace System.Diagnostics
+namespace Kawayi.Demystifier
 {
     public class ResolvedMethod
     {
         public MethodBase? MethodBase { get; set; }
 
         public Type? DeclaringType { get; set; }
-        
+
         public bool IsAsync { get; set; }
 
         public bool IsLambda { get; set; }
@@ -39,8 +38,8 @@ namespace System.Diagnostics
 
         internal bool IsSequentialEquivalent(ResolvedMethod obj)
         {
-            return 
-                IsAsync == obj.IsAsync && 
+            return
+                IsAsync == obj.IsAsync &&
                 DeclaringType == obj.DeclaringType &&
                 Name == obj.Name &&
                 IsLambda == obj.IsLambda &&
@@ -54,10 +53,10 @@ namespace System.Diagnostics
         public StringBuilder Append(StringBuilder builder)
             => Append(builder, true);
 
-        public StyledBuilder Append(
-            StyledBuilder builder,
-            StyledBuilderOption option)
-            => Append(builder, true, option);
+        public StyledStringBuilder Append(
+            StyledStringBuilder stringBuilder,
+            StyleOptions option)
+            => Append(stringBuilder, true, option);
 
         public StringBuilder Append(StringBuilder builder, bool fullName)
         {
@@ -171,11 +170,11 @@ namespace System.Diagnostics
         }
 
 
-        public StyledBuilder Append(StyledBuilder builder, bool fullName, StyledBuilderOption option)
+        public StyledStringBuilder Append(StyledStringBuilder stringBuilder, bool fullName, StyleOptions option)
         {
             if (IsAsync)
             {
-                builder.Append(option.KeywordAsyncStyle,"async ");
+                stringBuilder.Append(option.KeywordAsyncStyle,"async ");
             }
 
             if (ReturnParameter != null)
@@ -183,9 +182,9 @@ namespace System.Diagnostics
                 {
                     var sb = new StringBuilder();
                     ReturnParameter.Append(sb);
-                    builder.Append(option.MethodReturnTypeStyle,sb.ToString());
+                    stringBuilder.Append(option.MethodReturnTypeStyle,sb.ToString());
                 }
-                builder.Append(" ");
+                stringBuilder.Append(" ");
             }
 
             if (DeclaringType != null)
@@ -194,29 +193,29 @@ namespace System.Diagnostics
                 if (Name == ".ctor")
                 {
                     if (string.IsNullOrEmpty(SubMethod) && !IsLambda)
-                        builder.Append(option.KeywordNewStyle,"new ");
+                        stringBuilder.Append(option.KeywordNewStyle,"new ");
 
-                    AppendDeclaringTypeName(builder,fullName, option);
+                    AppendDeclaringTypeName(stringBuilder,fullName, option);
                 }
                 else if (Name == ".cctor")
                 {
-                    builder.Append(option.KeywordStaticStyle,"static ");
-                    AppendDeclaringTypeName(builder,fullName, option);
+                    stringBuilder.Append(option.KeywordStaticStyle,"static ");
+                    AppendDeclaringTypeName(stringBuilder,fullName, option);
                 }
                 else
                 {
-                    AppendDeclaringTypeName(builder,fullName,option)
+                    AppendDeclaringTypeName(stringBuilder,fullName,option)
                         .Append(".")
                         .Append(option.MethodNameStyle,Name ?? "null");
                 }
             }
             else
             {
-                builder.Append(option.MethodNameStyle, Name ?? "null");
+                stringBuilder.Append(option.MethodNameStyle, Name ?? "null");
             }
-            builder.Append(option.GenericArgumentStyle,GenericArguments ?? string.Empty);
+            stringBuilder.Append(option.GenericArgumentStyle,GenericArguments ?? string.Empty);
 
-            builder.Append("(");
+            stringBuilder.Append("(");
             if (MethodBase != null)
             {
                 var isFirst = true;
@@ -228,22 +227,22 @@ namespace System.Diagnostics
                     }
                     else
                     {
-                        builder.Append(", ");
+                        stringBuilder.Append(", ");
                     }
-                    param.Append(builder, option);
+                    param.Append(stringBuilder, option);
                 }
             }
             else
             {
-                builder.Append("?");
+                stringBuilder.Append("?");
             }
-            builder.Append(")");
+            stringBuilder.Append(")");
 
             if (!string.IsNullOrEmpty(SubMethod) || IsLambda)
             {
-                builder.Append("+");
-                builder.Append(option.SubMethodOrLambdaStyle,new StringBuilder().Append(SubMethod).ToString());
-                builder.Append("(");
+                stringBuilder.Append("+");
+                stringBuilder.Append(option.SubMethodOrLambdaStyle,new StringBuilder().Append(SubMethod).ToString());
+                stringBuilder.Append("(");
                 if (SubMethodBase != null)
                 {
                     var isFirst = true;
@@ -255,36 +254,36 @@ namespace System.Diagnostics
                         }
                         else
                         {
-                            builder.Append(", ");
+                            stringBuilder.Append(", ");
                         }
-                        param.Append(builder, option);
+                        param.Append(stringBuilder, option);
                     }
                 }
                 else
                 {
-                    builder.Append("?");
+                    stringBuilder.Append("?");
                 }
-                builder.Append(")");
+                stringBuilder.Append(")");
                 if (IsLambda)
                 {
-                    builder.Append(option.SubMethodOrLambdaStyle," => { }");
+                    stringBuilder.Append(option.SubMethodOrLambdaStyle," => { }");
 
                     if (Ordinal.HasValue)
                     {
-                        builder.Append(" [");
-                        builder.Append(Ordinal.ToString() ??
+                        stringBuilder.Append(" [");
+                        stringBuilder.Append(Ordinal.ToString() ??
                             throw new InvalidOperationException());
-                        builder.Append("]");
+                        stringBuilder.Append("]");
                     }
                 }
             }
 
             if (RecurseCount > 0)
             {
-                builder.Append($" x {RecurseCount + 1:0}");
+                stringBuilder.Append($" x {RecurseCount + 1:0}");
             }
 
-            return builder;
+            return stringBuilder;
         }
 
         private StringBuilder AppendDeclaringTypeName(StringBuilder builder, bool fullName = true)
@@ -292,11 +291,11 @@ namespace System.Diagnostics
             return DeclaringType != null ? builder.AppendTypeDisplayName(DeclaringType, fullName: fullName, includeGenericParameterNames: true) : builder;
         }
 
-        private StyledBuilder AppendDeclaringTypeName(StyledBuilder builder, bool fullName,StyledBuilderOption option)
+        private StyledStringBuilder AppendDeclaringTypeName(StyledStringBuilder stringBuilder, bool fullName,StyleOptions option)
         {
             StringBuilder sb = new();
             AppendDeclaringTypeName(sb,fullName);
-            return builder.Append(option.DeclaringTypeOfMethodStyle,sb.ToString());
+            return stringBuilder.Append(option.DeclaringTypeOfMethodStyle,sb.ToString());
         }
     }
 }

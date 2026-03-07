@@ -1,3 +1,7 @@
 <Solution>
   <Project Path="./src/Kawayi.Demystifier/Kawayi.Demystifier.csproj" />
+    <Project Path="./src/test/Kawayi.Demystifier.Test/Kawayi.Demystifier.Test.csproj" />
+    <Project Path="./src/benchmark/Kawayi.Demystifier.Benchmarks/Kawayi.Demystifier.Benchmarks.csproj" />
+    <Project Path="./src/sample/FSharpStackTrace/FSharpStackTrace.fsproj" />
+    <Project Path="./src/sample/StackTrace/StackTrace.csproj" />
 </Solution>

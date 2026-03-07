@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cysharp.Text;
+﻿using Cysharp.Text;
 
-namespace Pillar.Demystifier;
+namespace Kawayi.Demystifier;
 
 /// <summary>
 /// The color
 /// </summary>
-public class Color
+public sealed class Color
 {
     public readonly byte R = 0;
     public readonly byte G = 0;
@@ -31,7 +26,7 @@ public class Color
     public static readonly Color Black = new Color(byte.MinValue, byte.MinValue, byte.MinValue);
 
     public static readonly Color White = new Color(byte.MaxValue, byte.MaxValue, byte.MaxValue);
-    
+
     public static readonly Color Gray = new Color(128,128,128);
 
     public static readonly Color Red = new Color(255,0,0);

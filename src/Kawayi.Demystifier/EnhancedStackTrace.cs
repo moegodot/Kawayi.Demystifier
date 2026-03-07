@@ -1,14 +1,12 @@
 // Copyright (c) Ben A Adams. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Pillar.Demystifier;
 using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Generic.Enumerable;
-using System.IO;
+using System.Diagnostics;
 using System.Text;
+using Kawayi.Demystifier.Enumerable;
 
-namespace System.Diagnostics
+namespace Kawayi.Demystifier
 {
     public partial class EnhancedStackTrace : StackTrace, IEnumerable<EnhancedStackFrame>
     {
@@ -85,11 +83,11 @@ namespace System.Diagnostics
             return sb.ToString();
         }
 
-        public string ToColoredString(StyledBuilderOption option)
+        public string ToColoredString(StyleOptions option)
         {
             if (_frames == null || _frames.Count == 0) return "";
 
-            var sb = new StyledBuilder();
+            var sb = new StyledStringBuilder();
 
             Append(sb,option);
 
@@ -131,7 +129,7 @@ namespace System.Diagnostics
             }
         }
 
-        internal void Append(StyledBuilder sb,StyledBuilderOption option)
+        internal void Append(StyledStringBuilder sb,StyleOptions option)
         {
             var frames = _frames;
             var count = frames.Count;

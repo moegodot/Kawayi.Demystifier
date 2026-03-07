@@ -5,7 +5,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <Deterministic>true</Deterministic>
-    <ContinuousIntegrationBuild Condition="'$(CI)' != 'false' or '$(GITHUB_ACTIONS)' != 'false'">true</ContinuousIntegrationBuild>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true' or '$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
 
     <Authors>MoeGodot(me@kawayi.moe)</Authors>
     <Copyright>Copyright ©2026 MoeGodot(me@kawayi.moe). All Rights Reserved.</Copyright>
@@ -19,14 +19,18 @@
     <MinVerMinimumMajorMinor>0.1</MinVerMinimumMajorMinor>
     <MinVerDefaultPreReleaseIdentifiers>snapshot.0</MinVerDefaultPreReleaseIdentifiers>
 
+      <IsPackable Condition="$([System.IO.Directory]::GetParent($(MSBuildProjectFullPath))) != 'src'">false</IsPackable>
+
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../../images/icon.png" Pack="true" PackagePath="\"/>
-    <None Include="../../README.md" Pack="true" PackagePath="\"/>
+    <None Include="$(MSBuildThisFileDirectory)/images/icon.png" Pack="true" PackagePath="\"/>
+    <None Include="$(MSBuildThisFileDirectory)/README.md" Pack="true" PackagePath="\"/>
+
     <PackageReference Include="MinVer" Version="7.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+
   </ItemGroup>
 </Project>

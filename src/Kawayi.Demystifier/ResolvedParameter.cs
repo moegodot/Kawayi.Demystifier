@@ -1,10 +1,9 @@
 // Copyright (c) Ben A Adams. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Pillar.Demystifier;
 using System.Text;
 
-namespace System.Diagnostics
+namespace Kawayi.Demystifier
 {
     public class ResolvedParameter
     {
@@ -23,7 +22,7 @@ namespace System.Diagnostics
         {
             if (ResolvedType.Assembly.ManifestModule.Name == "FSharp.Core.dll" && ResolvedType.Name == "Unit")
                 return sb;
-            
+
             if (!string.IsNullOrEmpty(Prefix))
             {
                 sb.Append(Prefix)
@@ -52,7 +51,7 @@ namespace System.Diagnostics
             return sb;
         }
 
-        public StyledBuilder Append(StyledBuilder sb,StyledBuilderOption option)
+        public StyledStringBuilder Append(StyledStringBuilder sb,StyleOptions option)
         {
             if (ResolvedType.Assembly.ManifestModule.Name == "FSharp.Core.dll" && ResolvedType.Name == "Unit")
                 return sb;
@@ -85,12 +84,12 @@ namespace System.Diagnostics
             return sb;
         }
 
-        protected virtual void AppendTypeName(StringBuilder sb) 
+        protected virtual void AppendTypeName(StringBuilder sb)
         {
             sb.AppendTypeDisplayName(ResolvedType, fullName: false, includeGenericParameterNames: true);
         }
 
-        protected virtual void AppendTypeName(StyledBuilder sb,StyledBuilderOption option)
+        protected virtual void AppendTypeName(StyledStringBuilder sb,StyleOptions option)
         {
             StringBuilder stringBuilder = new();
             stringBuilder.AppendTypeDisplayName(ResolvedType, fullName: false, includeGenericParameterNames: true);

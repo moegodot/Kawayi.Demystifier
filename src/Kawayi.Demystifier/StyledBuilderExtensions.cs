@@ -1,43 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Generic.Enumerable;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Kawayi.Demystifier.Enumerable;
 
-namespace Pillar.Demystifier;
+namespace Kawayi.Demystifier;
 
 public static class StyledBuilderExtensions
 {
-    public static StyledBuilder AppendDemystified(this StyledBuilder builder, Exception exception,StyledBuilderOption option)
+    public static StyledStringBuilder AppendDemystified(this StyledStringBuilder stringBuilder, Exception exception,StyleOptions option)
     {
         try
         {
-            var stackTrace = new System.Diagnostics.EnhancedStackTrace(exception);
+            var stackTrace = new EnhancedStackTrace(exception);
 
-            builder.Append(exception.GetType().ToString());
+            stringBuilder.Append(exception.GetType().ToString());
             if (!string.IsNullOrEmpty(exception.Message))
             {
-                builder.Append(": ").Append(option.MessageStyle,exception.Message);
+                stringBuilder.Append(": ").Append(option.MessageStyle,exception.Message);
             }
-            builder.Append(Environment.NewLine);
+            stringBuilder.Append(Environment.NewLine);
 
             if (stackTrace.FrameCount > 0)
             {
-                stackTrace.Append(builder,option);
+                stackTrace.Append(stringBuilder,option);
             }
 
             if (exception is AggregateException aggEx)
             {
                 foreach (var ex in EnumerableIList.Create(aggEx.InnerExceptions))
                 {
-                    builder.AppendInnerException(ex, option);
+                    stringBuilder.AppendInnerException(ex, option);
                 }
             }
 
             if (exception.InnerException != null)
             {
-                builder.AppendInnerException(exception.InnerException,option);
+                stringBuilder.AppendInnerException(exception.InnerException,option);
             }
         }
         catch (Exception e)
@@ -46,14 +41,14 @@ public static class StyledBuilderExtensions
             throw new AggregateException("inner exception", e, exception);
         }
 
-        return builder;
+        return stringBuilder;
     }
 
     private static void AppendInnerException(
-        this StyledBuilder builder,
+        this StyledStringBuilder stringBuilder,
         Exception exception,
-        StyledBuilderOption option)
-        => builder
+        StyleOptions option)
+        => stringBuilder
             .Append(option.InnerExceptionOpenStyle,"   --->")
             .AppendLine()
             .AppendDemystified(exception, option)

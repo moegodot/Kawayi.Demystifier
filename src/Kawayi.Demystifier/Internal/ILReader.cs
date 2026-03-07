@@ -1,7 +1,7 @@
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace System.Diagnostics.Internal
+namespace Kawayi.Demystifier.Internal
 {
     internal class ILReader
     {

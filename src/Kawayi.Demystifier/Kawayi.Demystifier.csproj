@@ -8,15 +8,10 @@
         <Title>Kawayi.Demystifier</Title>
         <RepositoryUrl>https://github.com/moegodot/Kawayi.Demystifier</RepositoryUrl>
 
-        <Version>1.0.0</Version>
-
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Reflection.Metadata">
-            <Version>9.0.10</Version>
-        </PackageReference>
         <PackageReference Include="ZString" Version="2.6.0" />
     </ItemGroup>
 

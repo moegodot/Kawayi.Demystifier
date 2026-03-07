@@ -1,24 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.PortableExecutable;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Kawayi.Demystifier;
 
-namespace Pillar.Demystifier;
-
-public class StyledBuilderOption
+public sealed class StyleOptions
 {
     /// <summary>
     /// Global option.
     /// Use by default if there is no option passed.
     /// </summary>
-    public static StyledBuilderOption GlobalOption { get; set; } = new(true);
+    public static StyleOptions GlobalOption { get; set; } = new(true);
 
-    public static StyledBuilderOption NoColorOption { get; } = new(false);
+    public static StyleOptions NoColorOption { get; } = new(false);
 
     public bool EnableColor { get; }
-    
+
     /// <summary>
     /// The style <see cref="Exception.Message"/>.
     /// </summary>
@@ -122,7 +115,7 @@ public class StyledBuilderOption
         get;
         set;
     }  = new();
-    
+
     /// <summary>
     /// ---->
     /// </summary>
@@ -130,7 +123,7 @@ public class StyledBuilderOption
         get;
         set;
     }  = new();
-    
+
     /// <summary>
     /// --- End of inner exception stack trace ---
     /// </summary>
@@ -139,7 +132,7 @@ public class StyledBuilderOption
         set;
     }  = new();
 
-    public StyledBuilderOption(bool enableColor = true)
+    public StyleOptions(bool enableColor = true)
     {
         EnableColor = enableColor;
         if (enableColor)

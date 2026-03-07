@@ -1,24 +1,20 @@
-﻿using Cysharp.Text;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
+using Cysharp.Text;
 
-namespace Pillar.Demystifier;
+namespace Kawayi.Demystifier;
 
-public sealed class StyledBuilder : IDisposable
+public sealed class StyledStringBuilder : IDisposable
 {
-    private Utf16ValueStringBuilder _builder = ZString.CreateStringBuilder();
+    //private Utf16ValueStringBuilder _builder = ZString.CreateStringBuilder();
+    private readonly StringBuilder _builder = new StringBuilder();
 
-    public StyledBuilder Append(string text)
+    public StyledStringBuilder Append(string text)
     {
         _builder.Append(text);
         return this;
     }
 
-    public StyledBuilder Append(Style style,string text)
+    public StyledStringBuilder Append(Style style,string text)
     {
         var ansi = style.ToAnsiCode();
         _builder.Append(ansi);
@@ -30,7 +26,7 @@ public sealed class StyledBuilder : IDisposable
         return this;
     }
 
-    public StyledBuilder AppendPath(Style pathStyle,Style fileStyle,string path,bool shortenPath)
+    public StyledStringBuilder AppendPath(Style pathStyle,Style fileStyle,string path,bool shortenPath)
     {
         if (shortenPath)
         {
@@ -49,14 +45,14 @@ public sealed class StyledBuilder : IDisposable
         }
     }
 
-    public StyledBuilder AppendLine(string text)
+    public StyledStringBuilder AppendLine(string text)
     {
         _builder.Append(text);
         _builder.Append('\n');
         return this;
     }
 
-    public StyledBuilder AppendLine()
+    public StyledStringBuilder AppendLine()
     {
         _builder.Append('\n');
         return this;
@@ -64,7 +60,7 @@ public sealed class StyledBuilder : IDisposable
 
     public void Dispose()
     {
-        _builder.Dispose();
+        //_builder.Dispose();
     }
 
     public override string ToString()

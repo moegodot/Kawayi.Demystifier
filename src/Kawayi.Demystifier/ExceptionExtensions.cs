@@ -1,14 +1,10 @@
 // Copyright (c) Ben A Adams. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Pillar.Demystifier;
-using System.Collections.Generic;
-using System.Collections.Generic.Enumerable;
-using System.IO;
 using System.Reflection;
-using System.Text;
+using Kawayi.Demystifier.Enumerable;
 
-namespace System.Diagnostics
+namespace Kawayi.Demystifier
 {
     public static class ExceptionExtensions
     {
@@ -20,9 +16,9 @@ namespace System.Diagnostics
         /// <summary>
         /// Demystifies the given <paramref name="exception"/> and tracks the original stack traces for the whole exception tree.
         /// </summary>
-        public static T Demystify<T>(this T exception,StyledBuilderOption? option = null) where T : Exception
+        public static T Demystify<T>(this T exception,StyleOptions? option = null) where T : Exception
         {
-            option = option ?? StyledBuilderOption.GlobalOption;
+            option = option ?? StyleOptions.GlobalOption;
             try
             {
                 var stackTrace = new EnhancedStackTrace(exception);
@@ -50,14 +46,14 @@ namespace System.Diagnostics
             return exception;
         }
 
-        public static void PrintColoredStringDemystified(this Exception exception,StyledBuilderOption? option = null,TextWriter? writer = null)
+        public static void PrintStyledDemystifiedString(this Exception exception,StyleOptions? option = null,TextWriter? writer = null)
             => (writer ?? Console.Out)
-                .Write(new StyledBuilder().AppendDemystified(exception,
-                option ?? StyledBuilderOption.GlobalOption));
+                .Write(new StyledStringBuilder().AppendDemystified(exception,
+                option ?? StyleOptions.GlobalOption));
 
-        [Contracts.Pure]
-        public static string ToStringDemystified(this Exception exception, StyledBuilderOption? option = null)
-            => new StyledBuilder().AppendDemystified(exception,
-                option ?? StyledBuilderOption.GlobalOption).ToString();
+        [System.Diagnostics.Contracts.Pure]
+        public static string ToStyledDemystifiedString(this Exception exception, StyleOptions? option = null)
+            => new StyledStringBuilder().AppendDemystified(exception,
+                option ?? StyleOptions.GlobalOption).ToString();
     }
 }

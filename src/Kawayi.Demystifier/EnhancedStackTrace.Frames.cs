@@ -4,18 +4,15 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Generic.Enumerable;
-using System.Diagnostics.Internal;
-using System.Linq;
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using Kawayi.Demystifier.Enumerable;
+using Kawayi.Demystifier.Internal;
 
-namespace System.Diagnostics
+namespace Kawayi.Demystifier
 {
     public partial class EnhancedStackTrace
     {
