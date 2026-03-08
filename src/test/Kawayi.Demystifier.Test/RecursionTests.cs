@@ -50,7 +50,7 @@ namespace Kawayi.Demystifier.Test
             // Assert
             var stackTrace = demystifiedException.ToString();
             stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
-            var traces = stackTrace.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
+            var traces = stackTrace.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => Regex.Replace(s, " x [0-9]+", " x N"))
                 .Skip(1)
                 .ToArray();

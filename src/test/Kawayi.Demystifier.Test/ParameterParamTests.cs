@@ -21,7 +21,7 @@ namespace Kawayi.Demystifier.Test
             // Assert
             var stackTrace = dex.ToString();
             stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
-            var trace = string.Join(string.Empty, stackTrace.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+            var trace = string.Join(string.Empty, stackTrace.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
 
             var expected = string.Join(string.Empty, new[] {
                 "System.ArgumentException: Value does not fall within the expected range.",
