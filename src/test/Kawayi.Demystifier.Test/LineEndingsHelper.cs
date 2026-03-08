@@ -8,7 +8,7 @@ namespace Kawayi.Demystifier.Test
 
         public static string RemoveLineEndings(string original)
         {
-            return ReplaceLineEndings.Replace(original, "");
+            return ReplaceLineEndings.Replace(original.Replace("\r\n", "\n"), "");
         }
     }
 }
