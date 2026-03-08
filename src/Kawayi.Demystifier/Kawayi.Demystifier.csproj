@@ -11,8 +11,4 @@
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="ZString" Version="2.6.0" />
-    </ItemGroup>
-
 </Project>

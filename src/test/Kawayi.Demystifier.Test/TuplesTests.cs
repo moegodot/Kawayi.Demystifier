@@ -24,7 +24,7 @@ namespace Kawayi.Demystifier.Test
             // Assert
             var stackTrace = demystifiedException.ToString();
             stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
-            var trace = string.Join("", stackTrace.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+            var trace = string.Join("", stackTrace.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
 
             var expected = string.Join("", new[] {
                     "System.ArgumentException: Value does not fall within the expected range.",
@@ -51,7 +51,7 @@ namespace Kawayi.Demystifier.Test
             // Assert
             var stackTrace = demystifiedException.ToString();
             stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
-            var trace = string.Join("", stackTrace.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+            var trace = string.Join("", stackTrace.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
 
             var expected = string.Join("", new[] {
                     "System.ArgumentException: Value does not fall within the expected range.",

@@ -10,6 +10,8 @@ namespace Kawayi.Demystifier
 {
     public partial class EnhancedStackTrace : StackTrace, IEnumerable<EnhancedStackFrame>
     {
+        public const string DefaultNewLine = "\n";
+
         public static EnhancedStackTrace Current() => new EnhancedStackTrace(new StackTrace(1 /* skip this one frame */, true));
 
         private readonly List<EnhancedStackFrame> _frames;
@@ -103,14 +105,14 @@ namespace Kawayi.Demystifier
             {
                 if (i > 0)
                 {
-                    sb.Append(Environment.NewLine);
+                    sb.Append(DefaultNewLine);
                 }
 
                 var frame = frames[i];
 
                 sb.Append("   at ");
                 frame.MethodInfo.Append(sb);
-                
+
                 if (frame.GetFileName() is {} fileName
                     // IsNullOrEmpty alone wasn't enough to disable the null warning
                     && !string.IsNullOrEmpty(fileName))

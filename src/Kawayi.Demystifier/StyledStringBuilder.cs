@@ -1,11 +1,9 @@
 ﻿using System.Text;
-using Cysharp.Text;
 
 namespace Kawayi.Demystifier;
 
-public sealed class StyledStringBuilder : IDisposable
+public sealed class StyledStringBuilder
 {
-    //private Utf16ValueStringBuilder _builder = ZString.CreateStringBuilder();
     private readonly StringBuilder _builder = new StringBuilder();
 
     public StyledStringBuilder Append(string text)
@@ -56,11 +54,6 @@ public sealed class StyledStringBuilder : IDisposable
     {
         _builder.Append('\n');
         return this;
-    }
-
-    public void Dispose()
-    {
-        //_builder.Dispose();
     }
 
     public override string ToString()

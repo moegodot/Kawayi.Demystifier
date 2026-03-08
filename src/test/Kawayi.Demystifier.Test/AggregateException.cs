@@ -32,7 +32,7 @@ namespace Kawayi.Demystifier.Test
             // Assert
             var stackTrace = demystifiedException.ToString();
             stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
-            var trace = string.Join("", stackTrace.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
+            var trace = string.Join("", stackTrace.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries)
                 // Remove items that vary between test runners
                 .Where(s =>
                     (s != "   at Task Kawayi.Demystifier.Test.DynamicCompilation.DoesNotPreventStackTrace()+() => { }" &&

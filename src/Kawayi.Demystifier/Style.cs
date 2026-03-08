@@ -1,4 +1,4 @@
-﻿using Cysharp.Text;
+﻿using System.Text;
 
 namespace Kawayi.Demystifier;
 
@@ -60,7 +60,7 @@ public class Style
 
     internal string ToAnsiCode()
     {
-        using var sb = ZString.CreateStringBuilder();
+        var sb = new StringBuilder();
 
         if (BackgroundColor != null)
         {

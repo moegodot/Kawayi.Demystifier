@@ -28,7 +28,7 @@ namespace Kawayi.Demystifier.Test
             // Assert
             var stackTrace = demystifiedException.ToString();
             stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
-            var trace = stackTrace.Split(new[]{Environment.NewLine}, StringSplitOptions.None);
+            var trace = stackTrace.Split(new[]{"\n"}, StringSplitOptions.None);
 
 #if NETCOREAPP3_0_OR_GREATER
             Assert.Equal(
@@ -62,7 +62,7 @@ namespace Kawayi.Demystifier.Test
             // Assert
             stackTrace = demystifiedException.ToString();
             stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
-            trace = stackTrace.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            trace = stackTrace.Split(new[] { "\n" }, StringSplitOptions.None);
 
 #if NETCOREAPP3_0_OR_GREATER
             Assert.Equal(
@@ -100,7 +100,7 @@ namespace Kawayi.Demystifier.Test
             // Assert
             var stackTrace = est.ToString();
             stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
-            var trace = stackTrace.Split(new[] { Environment.NewLine }, StringSplitOptions.None)
+            var trace = stackTrace.Split(new[] { "\n" }, StringSplitOptions.None)
                 // Remove Full framework entries
                 .Where(s => !s.StartsWith("   at bool System.Threading._ThreadPoolWaitCallbac") &&
                             !s.StartsWith("   at void System.Threading.Tasks.Task.System.Thre"))

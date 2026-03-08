@@ -37,7 +37,7 @@ namespace Kawayi.Demystifier.Test
             // Assert
             var stackTrace = demystifiedException.ToString();
             stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
-            var trace = stackTrace.Split(new[] { Environment.NewLine }, StringSplitOptions.None)
+            var trace = stackTrace.Split(new[] { "\n" }, StringSplitOptions.None)
                 // Remove items that vary between test runners
                 .Where(s =>
                     s != "   at void System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, object state)" &&

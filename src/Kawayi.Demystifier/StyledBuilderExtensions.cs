@@ -15,7 +15,7 @@ public static class StyledBuilderExtensions
             {
                 stringBuilder.Append(": ").Append(option.MessageStyle,exception.Message);
             }
-            stringBuilder.Append(Environment.NewLine);
+            stringBuilder.Append("\n");
 
             if (stackTrace.FrameCount > 0)
             {
