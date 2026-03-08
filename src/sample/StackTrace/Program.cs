@@ -18,7 +18,7 @@ class Program
         }
         catch (Exception ex)
         {
-            using StyledStringBuilder styled = new();
+            StyledStringBuilder styled = new();
 
             // original
             styled.Append(new Style()
