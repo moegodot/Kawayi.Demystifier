@@ -61,6 +61,7 @@ jobs:
               uses: actions/download-artifact@v5
               with:
                   artifact-ids: ${{ needs.pack-and-upload.outputs.artifact-id }}
+                  path: .
             - name: Publish to NuGet
               run: |
                   dotnet nuget push ./*.nupkg \
