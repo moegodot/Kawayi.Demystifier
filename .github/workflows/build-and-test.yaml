@@ -33,6 +33,8 @@ jobs:
         needs: build-and-test
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         runs-on: ubuntu-latest
+        outputs:
+            id: ${{ steps.upload.outputs.artifact-id }}
         steps:
             - uses: actions/checkout@v4
               with:
@@ -49,6 +51,7 @@ jobs:
                     --no-build \
                     --output ./packages
             - name: Upload
+              id: upload
               uses: actions/upload-artifact@v4
               with:
                   path: ./packages/*
@@ -60,7 +63,7 @@ jobs:
             - name: Download artifacts
               uses: actions/download-artifact@v5
               with:
-                  artifact-ids: ${{ needs.pack-and-upload.outputs.artifact-id }}
+                  artifact-ids: ${{ needs.pack-and-upload.outputs.id }}
                   path: .
             - name: Publish to NuGet
               run: |
