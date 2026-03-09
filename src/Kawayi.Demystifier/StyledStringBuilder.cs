@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 
 namespace Kawayi.Demystifier;
 
@@ -12,7 +12,7 @@ public sealed class StyledStringBuilder
         return this;
     }
 
-    public StyledStringBuilder Append(Style style,string text)
+    public StyledStringBuilder Append(Style style, string text)
     {
         var ansi = style.ToAnsiCode();
         _builder.Append(ansi);
@@ -24,7 +24,7 @@ public sealed class StyledStringBuilder
         return this;
     }
 
-    public StyledStringBuilder AppendPath(Style pathStyle,Style fileStyle,string path,bool shortenPath)
+    public StyledStringBuilder AppendPath(Style pathStyle, Style fileStyle, string path, bool shortenPath)
     {
         if (shortenPath)
         {
@@ -32,7 +32,8 @@ public sealed class StyledStringBuilder
                 fileStyle,
                 Path.GetFileName(path));
         }
-        else {
+        else
+        {
             return this.Append(
                 pathStyle,
                 Path.GetDirectoryName(path) ?? string.Empty)

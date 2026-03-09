@@ -1,10 +1,10 @@
-﻿using Kawayi.Demystifier.Enumerable;
+using Kawayi.Demystifier.Enumerable;
 
 namespace Kawayi.Demystifier;
 
 public static class StyledBuilderExtensions
 {
-    public static StyledStringBuilder AppendDemystified(this StyledStringBuilder stringBuilder, Exception exception,StyleOptions option)
+    public static StyledStringBuilder AppendDemystified(this StyledStringBuilder stringBuilder, Exception exception, StyleOptions option)
     {
         try
         {
@@ -13,13 +13,13 @@ public static class StyledBuilderExtensions
             stringBuilder.Append(exception.GetType().ToString());
             if (!string.IsNullOrEmpty(exception.Message))
             {
-                stringBuilder.Append(": ").Append(option.MessageStyle,exception.Message);
+                stringBuilder.Append(": ").Append(option.MessageStyle, exception.Message);
             }
             stringBuilder.Append("\n");
 
             if (stackTrace.FrameCount > 0)
             {
-                stackTrace.Append(stringBuilder,option);
+                stackTrace.Append(stringBuilder, option);
             }
 
             if (exception is AggregateException aggEx)
@@ -32,7 +32,7 @@ public static class StyledBuilderExtensions
 
             if (exception.InnerException != null)
             {
-                stringBuilder.AppendInnerException(exception.InnerException,option);
+                stringBuilder.AppendInnerException(exception.InnerException, option);
             }
         }
         catch (Exception e)
@@ -49,10 +49,10 @@ public static class StyledBuilderExtensions
         Exception exception,
         StyleOptions option)
         => stringBuilder
-            .Append(option.InnerExceptionOpenStyle,"   --->")
+            .Append(option.InnerExceptionOpenStyle, "   --->")
             .AppendLine()
             .AppendDemystified(exception, option)
             .AppendLine()
             .Append("   ")
-            .Append(option.InnerExceptionEndStyle,"--- End of inner exception stack trace ---");
+            .Append(option.InnerExceptionEndStyle, "--- End of inner exception stack trace ---");
 }

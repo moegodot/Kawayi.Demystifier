@@ -5,105 +5,132 @@ using System.Reflection;
 using System.Text;
 using Kawayi.Demystifier.Enumerable;
 
-namespace Kawayi.Demystifier
+namespace Kawayi.Demystifier;
+
+public class ResolvedMethod
 {
-    public class ResolvedMethod
+    public MethodBase? MethodBase { get; set; }
+
+    public Type? DeclaringType { get; set; }
+
+    public bool IsAsync { get; set; }
+
+    public bool IsLambda { get; set; }
+
+    public ResolvedParameter? ReturnParameter { get; set; }
+
+    public string? Name { get; set; }
+
+    public int? Ordinal { get; set; }
+
+    public string? GenericArguments { get; set; }
+
+    public Type[]? ResolvedGenericArguments { get; set; }
+
+    public MethodBase? SubMethodBase { get; set; }
+
+    public string? SubMethod { get; set; }
+
+    public EnumerableIList<ResolvedParameter> Parameters { get; set; }
+
+    public EnumerableIList<ResolvedParameter> SubMethodParameters { get; set; }
+    public int RecurseCount { get; internal set; }
+
+    internal bool IsSequentialEquivalent(ResolvedMethod obj)
     {
-        public MethodBase? MethodBase { get; set; }
+        return
+            IsAsync == obj.IsAsync &&
+            DeclaringType == obj.DeclaringType &&
+            Name == obj.Name &&
+            IsLambda == obj.IsLambda &&
+            Ordinal == obj.Ordinal &&
+            GenericArguments == obj.GenericArguments &&
+            SubMethod == obj.SubMethod;
+    }
 
-        public Type? DeclaringType { get; set; }
+    public override string ToString() => Append(new StringBuilder()).ToString();
 
-        public bool IsAsync { get; set; }
+    public StringBuilder Append(StringBuilder builder)
+        => Append(builder, true);
 
-        public bool IsLambda { get; set; }
+    public StyledStringBuilder Append(
+        StyledStringBuilder stringBuilder,
+        StyleOptions option)
+        => Append(stringBuilder, true, option);
 
-        public ResolvedParameter? ReturnParameter { get; set; }
-
-        public string? Name { get; set; }
-
-        public int? Ordinal { get; set; }
-
-        public string? GenericArguments { get; set; }
-
-        public Type[]? ResolvedGenericArguments { get; set; }
-
-        public MethodBase? SubMethodBase { get; set; }
-
-        public string? SubMethod { get; set; }
-
-        public EnumerableIList<ResolvedParameter> Parameters { get; set; }
-
-        public EnumerableIList<ResolvedParameter> SubMethodParameters { get; set; }
-        public int RecurseCount { get; internal set; }
-
-        internal bool IsSequentialEquivalent(ResolvedMethod obj)
+    public StringBuilder Append(StringBuilder builder, bool fullName)
+    {
+        if (IsAsync)
         {
-            return
-                IsAsync == obj.IsAsync &&
-                DeclaringType == obj.DeclaringType &&
-                Name == obj.Name &&
-                IsLambda == obj.IsLambda &&
-                Ordinal == obj.Ordinal &&
-                GenericArguments == obj.GenericArguments &&
-                SubMethod == obj.SubMethod;
+            builder.Append("async ");
         }
 
-        public override string ToString() => Append(new StringBuilder()).ToString();
-
-        public StringBuilder Append(StringBuilder builder)
-            => Append(builder, true);
-
-        public StyledStringBuilder Append(
-            StyledStringBuilder stringBuilder,
-            StyleOptions option)
-            => Append(stringBuilder, true, option);
-
-        public StringBuilder Append(StringBuilder builder, bool fullName)
+        if (ReturnParameter != null)
         {
-            if (IsAsync)
+            ReturnParameter.Append(builder);
+            builder.Append(" ");
+        }
+
+        if (DeclaringType != null)
+        {
+
+            if (Name == ".ctor")
             {
-                builder.Append("async ");
+                if (string.IsNullOrEmpty(SubMethod) && !IsLambda)
+                    builder.Append("new ");
+
+                AppendDeclaringTypeName(builder, fullName);
             }
-
-            if (ReturnParameter != null)
+            else if (Name == ".cctor")
             {
-                ReturnParameter.Append(builder);
-                builder.Append(" ");
-            }
-
-            if (DeclaringType != null)
-            {
-
-                if (Name == ".ctor")
-                {
-                    if (string.IsNullOrEmpty(SubMethod) && !IsLambda)
-                        builder.Append("new ");
-
-                    AppendDeclaringTypeName(builder, fullName);
-                }
-                else if (Name == ".cctor")
-                {
-                    builder.Append("static ");
-                    AppendDeclaringTypeName(builder, fullName);
-                }
-                else
-                {
-                    AppendDeclaringTypeName(builder, fullName)
-                        .Append(".")
-                        .Append(Name);
-                }
+                builder.Append("static ");
+                AppendDeclaringTypeName(builder, fullName);
             }
             else
             {
-                builder.Append(Name);
+                AppendDeclaringTypeName(builder, fullName)
+                    .Append(".")
+                    .Append(Name);
             }
-            builder.Append(GenericArguments);
+        }
+        else
+        {
+            builder.Append(Name);
+        }
+        builder.Append(GenericArguments);
 
+        builder.Append("(");
+        if (MethodBase != null)
+        {
+            var isFirst = true;
+            foreach (var param in Parameters)
+            {
+                if (isFirst)
+                {
+                    isFirst = false;
+                }
+                else
+                {
+                    builder.Append(", ");
+                }
+                param.Append(builder);
+            }
+        }
+        else
+        {
+            builder.Append("?");
+        }
+        builder.Append(")");
+
+        if (!string.IsNullOrEmpty(SubMethod) || IsLambda)
+        {
+            builder.Append("+");
+            builder.Append(SubMethod);
             builder.Append("(");
-            if (MethodBase != null)
+            if (SubMethodBase != null)
             {
                 var isFirst = true;
-                foreach(var param in Parameters)
+                foreach (var param in SubMethodParameters)
                 {
                     if (isFirst)
                     {
@@ -121,105 +148,105 @@ namespace Kawayi.Demystifier
                 builder.Append("?");
             }
             builder.Append(")");
-
-            if (!string.IsNullOrEmpty(SubMethod) || IsLambda)
+            if (IsLambda)
             {
-                builder.Append("+");
-                builder.Append(SubMethod);
-                builder.Append("(");
-                if (SubMethodBase != null)
-                {
-                    var isFirst = true;
-                    foreach (var param in SubMethodParameters)
-                    {
-                        if (isFirst)
-                        {
-                            isFirst = false;
-                        }
-                        else
-                        {
-                            builder.Append(", ");
-                        }
-                        param.Append(builder);
-                    }
-                }
-                else
-                {
-                    builder.Append("?");
-                }
-                builder.Append(")");
-                if (IsLambda)
-                {
-                    builder.Append(" => { }");
+                builder.Append(" => { }");
 
-                    if (Ordinal.HasValue)
-                    {
-                        builder.Append(" [");
-                        builder.Append(Ordinal);
-                        builder.Append("]");
-                    }
+                if (Ordinal.HasValue)
+                {
+                    builder.Append(" [");
+                    builder.Append(Ordinal);
+                    builder.Append("]");
                 }
             }
-
-            if (RecurseCount > 0)
-            {
-                builder.Append($" x {RecurseCount + 1:0}");
-            }
-
-            return builder;
         }
 
-
-        public StyledStringBuilder Append(StyledStringBuilder stringBuilder, bool fullName, StyleOptions option)
+        if (RecurseCount > 0)
         {
-            if (IsAsync)
+            builder.Append($" x {RecurseCount + 1:0}");
+        }
+
+        return builder;
+    }
+
+
+    public StyledStringBuilder Append(StyledStringBuilder stringBuilder, bool fullName, StyleOptions option)
+    {
+        if (IsAsync)
+        {
+            stringBuilder.Append(option.KeywordAsyncStyle, "async ");
+        }
+
+        if (ReturnParameter != null)
+        {
             {
-                stringBuilder.Append(option.KeywordAsyncStyle,"async ");
+                var sb = new StringBuilder();
+                ReturnParameter.Append(sb);
+                stringBuilder.Append(option.MethodReturnTypeStyle, sb.ToString());
             }
+            stringBuilder.Append(" ");
+        }
 
-            if (ReturnParameter != null)
+        if (DeclaringType != null)
+        {
+
+            if (Name == ".ctor")
             {
-                {
-                    var sb = new StringBuilder();
-                    ReturnParameter.Append(sb);
-                    stringBuilder.Append(option.MethodReturnTypeStyle,sb.ToString());
-                }
-                stringBuilder.Append(" ");
+                if (string.IsNullOrEmpty(SubMethod) && !IsLambda)
+                    stringBuilder.Append(option.KeywordNewStyle, "new ");
+
+                AppendDeclaringTypeName(stringBuilder, fullName, option);
             }
-
-            if (DeclaringType != null)
+            else if (Name == ".cctor")
             {
-
-                if (Name == ".ctor")
-                {
-                    if (string.IsNullOrEmpty(SubMethod) && !IsLambda)
-                        stringBuilder.Append(option.KeywordNewStyle,"new ");
-
-                    AppendDeclaringTypeName(stringBuilder,fullName, option);
-                }
-                else if (Name == ".cctor")
-                {
-                    stringBuilder.Append(option.KeywordStaticStyle,"static ");
-                    AppendDeclaringTypeName(stringBuilder,fullName, option);
-                }
-                else
-                {
-                    AppendDeclaringTypeName(stringBuilder,fullName,option)
-                        .Append(".")
-                        .Append(option.MethodNameStyle,Name ?? "null");
-                }
+                stringBuilder.Append(option.KeywordStaticStyle, "static ");
+                AppendDeclaringTypeName(stringBuilder, fullName, option);
             }
             else
             {
-                stringBuilder.Append(option.MethodNameStyle, Name ?? "null");
+                AppendDeclaringTypeName(stringBuilder, fullName, option)
+                    .Append(".")
+                    .Append(option.MethodNameStyle, Name ?? "null");
             }
-            stringBuilder.Append(option.GenericArgumentStyle,GenericArguments ?? string.Empty);
+        }
+        else
+        {
+            stringBuilder.Append(option.MethodNameStyle, Name ?? "null");
+        }
+        stringBuilder.Append(option.GenericArgumentStyle, GenericArguments ?? string.Empty);
 
+        stringBuilder.Append("(");
+        if (MethodBase != null)
+        {
+            var isFirst = true;
+            foreach (var param in Parameters)
+            {
+                if (isFirst)
+                {
+                    isFirst = false;
+                }
+                else
+                {
+                    stringBuilder.Append(", ");
+                }
+                param.Append(stringBuilder, option);
+            }
+        }
+        else
+        {
+            stringBuilder.Append("?");
+        }
+        stringBuilder.Append(")");
+
+        if (!string.IsNullOrEmpty(SubMethod) || IsLambda)
+        {
+            stringBuilder.Append("+");
+            stringBuilder.Append(option.SubMethodOrLambdaStyle, new StringBuilder().Append(SubMethod).ToString());
             stringBuilder.Append("(");
-            if (MethodBase != null)
+            if (SubMethodBase != null)
             {
                 var isFirst = true;
-                foreach (var param in Parameters)
+                foreach (var param in SubMethodParameters)
                 {
                     if (isFirst)
                     {
@@ -237,65 +264,37 @@ namespace Kawayi.Demystifier
                 stringBuilder.Append("?");
             }
             stringBuilder.Append(")");
-
-            if (!string.IsNullOrEmpty(SubMethod) || IsLambda)
+            if (IsLambda)
             {
-                stringBuilder.Append("+");
-                stringBuilder.Append(option.SubMethodOrLambdaStyle,new StringBuilder().Append(SubMethod).ToString());
-                stringBuilder.Append("(");
-                if (SubMethodBase != null)
-                {
-                    var isFirst = true;
-                    foreach (var param in SubMethodParameters)
-                    {
-                        if (isFirst)
-                        {
-                            isFirst = false;
-                        }
-                        else
-                        {
-                            stringBuilder.Append(", ");
-                        }
-                        param.Append(stringBuilder, option);
-                    }
-                }
-                else
-                {
-                    stringBuilder.Append("?");
-                }
-                stringBuilder.Append(")");
-                if (IsLambda)
-                {
-                    stringBuilder.Append(option.SubMethodOrLambdaStyle," => { }");
+                stringBuilder.Append(option.SubMethodOrLambdaStyle, " => { }");
 
-                    if (Ordinal.HasValue)
-                    {
-                        stringBuilder.Append(" [");
-                        stringBuilder.Append(Ordinal.ToString() ??
-                            throw new InvalidOperationException());
-                        stringBuilder.Append("]");
-                    }
+                if (Ordinal.HasValue)
+                {
+                    stringBuilder.Append(" [");
+                    stringBuilder.Append(Ordinal.ToString() ??
+                                         throw new InvalidOperationException());
+                    stringBuilder.Append("]");
                 }
             }
-
-            if (RecurseCount > 0)
-            {
-                stringBuilder.Append($" x {RecurseCount + 1:0}");
-            }
-
-            return stringBuilder;
         }
 
-        private StringBuilder AppendDeclaringTypeName(StringBuilder builder, bool fullName = true)
+        if (RecurseCount > 0)
         {
-            return DeclaringType != null ? builder.AppendTypeDisplayName(DeclaringType, fullName: fullName, includeGenericParameterNames: true) : builder;
+            stringBuilder.Append($" x {RecurseCount + 1:0}");
         }
 
-        private StyledStringBuilder AppendDeclaringTypeName(StyledStringBuilder stringBuilder, bool fullName,StyleOptions option)
-        {
-            StringBuilder sb = new();
-            AppendDeclaringTypeName(sb,fullName);
-            return stringBuilder.Append(option.DeclaringTypeOfMethodStyle,sb.ToString());
-        }
+        return stringBuilder;
+    }
+
+    private StringBuilder AppendDeclaringTypeName(StringBuilder builder, bool fullName = true)
+    {
+        return DeclaringType != null ? builder.AppendTypeDisplayName(DeclaringType, fullName: fullName, includeGenericParameterNames: true) : builder;
+    }
+
+    private StyledStringBuilder AppendDeclaringTypeName(StyledStringBuilder stringBuilder, bool fullName, StyleOptions option)
+    {
+        StringBuilder sb = new();
+        AppendDeclaringTypeName(sb, fullName);
+        return stringBuilder.Append(option.DeclaringTypeOfMethodStyle, sb.ToString());
     }
 }

@@ -3,73 +3,72 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Kawayi.Demystifier.Test
+namespace Kawayi.Demystifier.Test;
+
+public class TuplesTests
 {
-    public class TuplesTests
+    [Fact]
+    public void DemistifiesAsyncMethodWithTuples()
     {
-        [Fact]
-        public void DemistifiesAsyncMethodWithTuples()
+        Exception demystifiedException = null;
+
+        try
         {
-            Exception demystifiedException = null;
-
-            try
-            {
-                AsyncThatReturnsTuple().GetAwaiter().GetResult();
-            }
-            catch (Exception ex)
-            {
-                demystifiedException = ex.Demystify(StyleOptions.NoColorOption);
-            }
-
-            // Assert
-            var stackTrace = demystifiedException.ToString();
-            stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
-            var trace = string.Join("", stackTrace.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
-
-            var expected = string.Join("", new[] {
-                    "System.ArgumentException: Value does not fall within the expected range.",
-                    "   at async Task<(int left, int right)> Kawayi.Demystifier.Test.TuplesTests.AsyncThatReturnsTuple()",
-                    "   at void Kawayi.Demystifier.Test.TuplesTests.DemistifiesAsyncMethodWithTuples()"});
-
-            Assert.Equal(expected, trace);
+            AsyncThatReturnsTuple().GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            demystifiedException = ex.Demystify(StyleOptions.NoColorOption);
         }
 
-        [Fact]
-        public void DemistifiesListOfTuples()
+        // Assert
+        var stackTrace = demystifiedException.ToString();
+        stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
+        var trace = string.Join("", stackTrace.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
+
+        var expected = string.Join("", new[] {
+            "System.ArgumentException: Value does not fall within the expected range.",
+            "   at async Task<(int left, int right)> Kawayi.Demystifier.Test.TuplesTests.AsyncThatReturnsTuple()",
+            "   at void Kawayi.Demystifier.Test.TuplesTests.DemistifiesAsyncMethodWithTuples()"});
+
+        Assert.Equal(expected, trace);
+    }
+
+    [Fact]
+    public void DemistifiesListOfTuples()
+    {
+        Exception demystifiedException = null;
+
+        try
         {
-            Exception demystifiedException = null;
-
-            try
-            {
-                ListOfTuples();
-            }
-            catch (Exception ex)
-            {
-                demystifiedException = ex.Demystify(StyleOptions.NoColorOption);
-            }
-
-            // Assert
-            var stackTrace = demystifiedException.ToString();
-            stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
-            var trace = string.Join("", stackTrace.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
-
-            var expected = string.Join("", new[] {
-                    "System.ArgumentException: Value does not fall within the expected range.",
-                    "   at List<(int left, int right)> Kawayi.Demystifier.Test.TuplesTests.ListOfTuples()",
-                    "   at void Kawayi.Demystifier.Test.TuplesTests.DemistifiesListOfTuples()"});
-
-            Assert.Equal(expected, trace);
+            ListOfTuples();
+        }
+        catch (Exception ex)
+        {
+            demystifiedException = ex.Demystify(StyleOptions.NoColorOption);
         }
 
-        async Task<(int left, int right)> AsyncThatReturnsTuple()
-        {
-            await Task.Delay(1).ConfigureAwait(false);
-            throw new ArgumentException();
-        }
+        // Assert
+        var stackTrace = demystifiedException.ToString();
+        stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
+        var trace = string.Join("", stackTrace.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
 
-        List<(int left, int right)> ListOfTuples()
-        {
-            throw new ArgumentException();
-        }
+        var expected = string.Join("", new[] {
+            "System.ArgumentException: Value does not fall within the expected range.",
+            "   at List<(int left, int right)> Kawayi.Demystifier.Test.TuplesTests.ListOfTuples()",
+            "   at void Kawayi.Demystifier.Test.TuplesTests.DemistifiesListOfTuples()"});
+
+        Assert.Equal(expected, trace);
+    }
+
+    async Task<(int left, int right)> AsyncThatReturnsTuple()
+    {
+        await Task.Delay(1).ConfigureAwait(false);
+        throw new ArgumentException();
+    }
+
+    List<(int left, int right)> ListOfTuples()
+    {
+        throw new ArgumentException();
     }
 }

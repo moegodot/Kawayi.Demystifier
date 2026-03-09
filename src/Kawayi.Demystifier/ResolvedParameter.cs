@@ -3,98 +3,97 @@
 
 using System.Text;
 
-namespace Kawayi.Demystifier
+namespace Kawayi.Demystifier;
+
+public class ResolvedParameter
 {
-    public class ResolvedParameter
+    public string? Name { get; set; }
+
+    public Type ResolvedType { get; set; }
+
+    public string? Prefix { get; set; }
+    public bool IsDynamicType { get; set; }
+
+    public ResolvedParameter(Type resolvedType) => ResolvedType = resolvedType;
+
+    public override string ToString() => Append(new StringBuilder()).ToString();
+
+    public StringBuilder Append(StringBuilder sb)
     {
-        public string? Name { get; set; }
-
-        public Type ResolvedType { get; set; }
-
-        public string? Prefix { get; set; }
-        public bool IsDynamicType { get; set; }
-
-        public ResolvedParameter(Type resolvedType) => ResolvedType = resolvedType;
-
-        public override string ToString() => Append(new StringBuilder()).ToString();
-
-        public StringBuilder Append(StringBuilder sb)
-        {
-            if (ResolvedType.Assembly.ManifestModule.Name == "FSharp.Core.dll" && ResolvedType.Name == "Unit")
-                return sb;
-
-            if (!string.IsNullOrEmpty(Prefix))
-            {
-                sb.Append(Prefix)
-                  .Append(" ");
-            }
-
-            if (IsDynamicType)
-            {
-                sb.Append("dynamic");
-            }
-            else if (ResolvedType != null)
-            {
-                AppendTypeName(sb);
-            }
-            else
-            {
-                sb.Append("?");
-            }
-
-            if (!string.IsNullOrEmpty(Name))
-            {
-                sb.Append(" ")
-                  .Append(Name);
-            }
-
+        if (ResolvedType.Assembly.ManifestModule.Name == "FSharp.Core.dll" && ResolvedType.Name == "Unit")
             return sb;
+
+        if (!string.IsNullOrEmpty(Prefix))
+        {
+            sb.Append(Prefix)
+                .Append(" ");
         }
 
-        public StyledStringBuilder Append(StyledStringBuilder sb,StyleOptions option)
+        if (IsDynamicType)
         {
-            if (ResolvedType.Assembly.ManifestModule.Name == "FSharp.Core.dll" && ResolvedType.Name == "Unit")
-                return sb;
+            sb.Append("dynamic");
+        }
+        else if (ResolvedType != null)
+        {
+            AppendTypeName(sb);
+        }
+        else
+        {
+            sb.Append("?");
+        }
 
-            if (!string.IsNullOrEmpty(Prefix))
-            {
-                sb.Append(option.ParamPrefixStyle, Prefix ?? string.Empty)
-                  .Append(" ");
-            }
+        if (!string.IsNullOrEmpty(Name))
+        {
+            sb.Append(" ")
+                .Append(Name);
+        }
 
-            if (IsDynamicType)
-            {
-                sb.Append(option.KeywordDynamicStyle,"dynamic");
-            }
-            else if (ResolvedType != null)
-            {
-                AppendTypeName(sb,option);
-            }
-            else
-            {
-                sb.Append("?");
-            }
+        return sb;
+    }
 
-            if (!string.IsNullOrEmpty(Name))
-            {
-                sb.Append(" ")
-                  .Append(option.ParamNameStyle,Name ?? string.Empty);
-            }
-
+    public StyledStringBuilder Append(StyledStringBuilder sb, StyleOptions option)
+    {
+        if (ResolvedType.Assembly.ManifestModule.Name == "FSharp.Core.dll" && ResolvedType.Name == "Unit")
             return sb;
-        }
 
-        protected virtual void AppendTypeName(StringBuilder sb)
+        if (!string.IsNullOrEmpty(Prefix))
         {
-            sb.AppendTypeDisplayName(ResolvedType, fullName: false, includeGenericParameterNames: true);
+            sb.Append(option.ParamPrefixStyle, Prefix ?? string.Empty)
+                .Append(" ");
         }
 
-        protected virtual void AppendTypeName(StyledStringBuilder sb,StyleOptions option)
+        if (IsDynamicType)
         {
-            StringBuilder stringBuilder = new();
-            stringBuilder.AppendTypeDisplayName(ResolvedType, fullName: false, includeGenericParameterNames: true);
-
-            sb.Append(option.ParamTypeStyle, stringBuilder.ToString());
+            sb.Append(option.KeywordDynamicStyle, "dynamic");
         }
+        else if (ResolvedType != null)
+        {
+            AppendTypeName(sb, option);
+        }
+        else
+        {
+            sb.Append("?");
+        }
+
+        if (!string.IsNullOrEmpty(Name))
+        {
+            sb.Append(" ")
+                .Append(option.ParamNameStyle, Name ?? string.Empty);
+        }
+
+        return sb;
+    }
+
+    protected virtual void AppendTypeName(StringBuilder sb)
+    {
+        sb.AppendTypeDisplayName(ResolvedType, fullName: false, includeGenericParameterNames: true);
+    }
+
+    protected virtual void AppendTypeName(StyledStringBuilder sb, StyleOptions option)
+    {
+        StringBuilder stringBuilder = new();
+        stringBuilder.AppendTypeDisplayName(ResolvedType, fullName: false, includeGenericParameterNames: true);
+
+        sb.Append(option.ParamTypeStyle, stringBuilder.ToString());
     }
 }

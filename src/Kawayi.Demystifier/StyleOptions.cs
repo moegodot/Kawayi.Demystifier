@@ -1,4 +1,4 @@
-﻿namespace Kawayi.Demystifier;
+namespace Kawayi.Demystifier;
 
 public sealed class StyleOptions
 {
@@ -15,31 +15,35 @@ public sealed class StyleOptions
     /// <summary>
     /// The style <see cref="Exception.Message"/>.
     /// </summary>
-    public Style MessageStyle{
+    public Style MessageStyle
+    {
         get;
         set;
-    }  = new();
+    } = new();
 
     /// <summary>
     /// this is path.no file name.
     /// </summary>
-    public Style SourcePathStyle{
+    public Style SourcePathStyle
+    {
         get;
         set;
-    }  = new();
+    } = new();
 
     /// <summary>
     /// this is file name.no path.
     /// </summary>
-    public Style SourceFileStyle{
+    public Style SourceFileStyle
+    {
         get;
         set;
-    }  = new();
+    } = new();
 
-    public Style LineNumberStyle{
+    public Style LineNumberStyle
+    {
         get;
         set;
-    }  = new();
+    } = new();
 
     /// <summary>
     /// If ture,will only print the file name of the source file.(no directory path)
@@ -52,85 +56,98 @@ public sealed class StyleOptions
         set;
     } = new();
 
-    public Style KeywordNewStyle{
+    public Style KeywordNewStyle
+    {
         get;
         set;
-    }  = new();
+    } = new();
 
-    public Style KeywordStaticStyle{
+    public Style KeywordStaticStyle
+    {
         get;
         set;
-    }  = new();
+    } = new();
 
-    public Style GenericArgumentStyle{
+    public Style GenericArgumentStyle
+    {
         get;
         set;
-    }  = new();
+    } = new();
 
-    public Style MethodNameStyle{
+    public Style MethodNameStyle
+    {
         get;
         set;
-    }  = new();
+    } = new();
 
     /// <summary>
     /// e.g. the `Namespace1.Namespace2.Class1` for method `Namespace1.Namespace2.Class1.Method()`
     /// </summary>
-    public Style DeclaringTypeOfMethodStyle{
+    public Style DeclaringTypeOfMethodStyle
+    {
         get;
         set;
-    }  = new();
+    } = new();
 
     /// <summary>
     /// Submethod or lambda defined in the method.
     /// </summary>
-    public Style SubMethodOrLambdaStyle{
+    public Style SubMethodOrLambdaStyle
+    {
         get;
         set;
-    }  = new();
+    } = new();
 
     /// <summary>
     /// such as in,ref,out...
     /// </summary>
-    public Style ParamPrefixStyle{
+    public Style ParamPrefixStyle
+    {
         get;
         set;
-    }  = new();
+    } = new();
 
-    public Style KeywordDynamicStyle{
+    public Style KeywordDynamicStyle
+    {
         get;
         set;
-    }  = new();
+    } = new();
 
-    public Style ParamNameStyle{
+    public Style ParamNameStyle
+    {
         get;
         set;
-    }  = new();
+    } = new();
 
-    public Style ParamTypeStyle{
+    public Style ParamTypeStyle
+    {
         get;
         set;
-    }  = new();
+    } = new();
 
-    public Style MethodReturnTypeStyle{
+    public Style MethodReturnTypeStyle
+    {
         get;
         set;
-    }  = new();
+    } = new();
 
     /// <summary>
     /// ---->
     /// </summary>
-    public Style InnerExceptionOpenStyle{
+    public Style InnerExceptionOpenStyle
+    {
         get;
         set;
-    }  = new();
+    } = new();
 
     /// <summary>
     /// --- End of inner exception stack trace ---
     /// </summary>
-    public Style InnerExceptionEndStyle{
+    public Style InnerExceptionEndStyle
+    {
         get;
         set;
-    }  = new();
+    } = new();
 
     public StyleOptions(bool enableColor = true)
     {

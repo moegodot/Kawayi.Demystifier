@@ -3,82 +3,81 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Kawayi.Demystifier.Test
+namespace Kawayi.Demystifier.Test;
+
+public sealed class ToDemystifiedStringTests
 {
-    public sealed class ToDemystifiedStringTests
+    private readonly ITestOutputHelper _output;
+
+    public ToDemystifiedStringTests(ITestOutputHelper output)
     {
-        private readonly ITestOutputHelper _output;
+        _output = output;
+    }
 
-        public ToDemystifiedStringTests(ITestOutputHelper output)
+    [Fact]
+    public void DemystifyShouldNotAffectTheOriginalStackTrace()
+    {
+        try
         {
-            _output = output;
+            SimpleMethodThatThrows(null).Wait();
+        }
+        catch (Exception e)
+        {
+            var original = e.ToString();
+            var stringDemystified = e.ToStyledDemystifiedString();
+
+            _output.WriteLine("Demystified: ");
+            _output.WriteLine(stringDemystified);
+
+            _output.WriteLine("Original: ");
+            var afterDemystified = e.ToString();
+            _output.WriteLine(afterDemystified);
+
+            Assert.Equal(original, afterDemystified);
         }
 
-        [Fact]
-        public void DemystifyShouldNotAffectTheOriginalStackTrace()
+        async Task SimpleMethodThatThrows(string value)
         {
-            try
+            if (value == null)
             {
-                SimpleMethodThatThrows(null).Wait();
-            }
-            catch (Exception e)
-            {
-                var original = e.ToString();
-                var stringDemystified = e.ToStyledDemystifiedString();
-
-                _output.WriteLine("Demystified: ");
-                _output.WriteLine(stringDemystified);
-
-                _output.WriteLine("Original: ");
-                var afterDemystified = e.ToString();
-                _output.WriteLine(afterDemystified);
-
-                Assert.Equal(original, afterDemystified);
+                throw new InvalidOperationException("message");
             }
 
-            async Task SimpleMethodThatThrows(string value)
+            await Task.Yield();
+        }
+    }
+
+
+    [Fact]
+    public void DemystifyKeepsMessage()
+    {
+        Exception ex = null;
+        try
+        {
+            throw new InvalidOperationException("aaa")
             {
-                if (value == null)
+                Data =
                 {
-                    throw new InvalidOperationException("message");
+                    ["bbb"] = "ccc",
+                    ["ddd"] = "eee",
                 }
-
-                await Task.Yield();
-            }
+            };
         }
-
-
-        [Fact]
-        public void DemystifyKeepsMessage()
+        catch (Exception e)
         {
-            Exception ex = null;
-            try
-            {
-                throw new InvalidOperationException("aaa")
-                {
-                    Data =
-                    {
-                        ["bbb"] = "ccc",
-                        ["ddd"] = "eee",
-                    }
-                };
-            }
-            catch (Exception e)
-            {
-                ex = e;
-            }
-
-            var original = ex.ToString();
-            var endLine = (int)Math.Min((uint)original.IndexOf('\n'), original.Length);
-
-            original = original.Substring(0, endLine);
-
-            var stringDemystified = ex.ToStyledDemystifiedString(StyleOptions.NoColorOption);
-            endLine = (int)Math.Min((uint)stringDemystified.IndexOf('\n'), stringDemystified.Length);
-
-            stringDemystified = stringDemystified.Substring(0, endLine);
-
-            Assert.Equal(original, stringDemystified);
+            ex = e;
         }
+
+        var original = ex.ToString();
+        var endLine = (int)Math.Min((uint)original.IndexOf('\n'), original.Length);
+
+        original = original.Substring(0, endLine);
+
+        var stringDemystified = ex.ToStyledDemystifiedString(StyleOptions.NoColorOption);
+        endLine = (int)Math.Min((uint)stringDemystified.IndexOf('\n'), stringDemystified.Length);
+
+        stringDemystified = stringDemystified.Substring(0, endLine);
+
+        Assert.Equal(original, stringDemystified);
     }
 }

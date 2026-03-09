@@ -2,135 +2,134 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Kawayi.Demystifier.Test
+namespace Kawayi.Demystifier.Test;
+
+public class MethodTests
 {
-    public class MethodTests
+    [Fact]
+    public void DemistifiesMethodWithNullableInt()
     {
-        [Fact]
-        public void DemistifiesMethodWithNullableInt()
+        Exception dex = null;
+        try
         {
-            Exception dex = null;
-            try
-            {
-                MethodWithNullableInt(1);
-            }
-            catch (Exception e)
-            {
-                dex = e.Demystify(StyleOptions.NoColorOption);
-            }
-
-            // Assert
-            var stackTrace = dex.ToString();
-            stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
-            var trace = string.Join(string.Empty, stackTrace.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
-
-            var expected = string.Join(string.Empty,
-                "System.ArgumentException: Value does not fall within the expected range.",
-                "   at bool Kawayi.Demystifier.Test.MethodTests.MethodWithNullableInt(int? number)",
-                "   at void Kawayi.Demystifier.Test.MethodTests.DemistifiesMethodWithNullableInt()");
-
-            Assert.Equal(expected, trace);
+            MethodWithNullableInt(1);
+        }
+        catch (Exception e)
+        {
+            dex = e.Demystify(StyleOptions.NoColorOption);
         }
 
-        [Fact]
-        public void DemistifiesMethodWithDynamic()
+        // Assert
+        var stackTrace = dex.ToString();
+        stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
+        var trace = string.Join(string.Empty, stackTrace.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
+
+        var expected = string.Join(string.Empty,
+            "System.ArgumentException: Value does not fall within the expected range.",
+            "   at bool Kawayi.Demystifier.Test.MethodTests.MethodWithNullableInt(int? number)",
+            "   at void Kawayi.Demystifier.Test.MethodTests.DemistifiesMethodWithNullableInt()");
+
+        Assert.Equal(expected, trace);
+    }
+
+    [Fact]
+    public void DemistifiesMethodWithDynamic()
+    {
+        Exception dex = null;
+        try
         {
-            Exception dex = null;
-            try
-            {
-                MethodWithDynamic(1);
-            }
-            catch (Exception e)
-            {
-                dex = e.Demystify(StyleOptions.NoColorOption);
-            }
-
-            // Assert
-            var stackTrace = dex.ToString();
-            stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
-            var trace = string.Join(string.Empty, stackTrace.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
-
-            var expected = string.Join(string.Empty,
-                "System.ArgumentException: Value does not fall within the expected range.",
-                "   at bool Kawayi.Demystifier.Test.MethodTests.MethodWithDynamic(dynamic value)",
-                "   at void Kawayi.Demystifier.Test.MethodTests.DemistifiesMethodWithDynamic()");
-
-            Assert.Equal(expected, trace);
+            MethodWithDynamic(1);
+        }
+        catch (Exception e)
+        {
+            dex = e.Demystify(StyleOptions.NoColorOption);
         }
 
-        [Fact]
-        public void DemistifiesMethodWithLambda()
+        // Assert
+        var stackTrace = dex.ToString();
+        stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
+        var trace = string.Join(string.Empty, stackTrace.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
+
+        var expected = string.Join(string.Empty,
+            "System.ArgumentException: Value does not fall within the expected range.",
+            "   at bool Kawayi.Demystifier.Test.MethodTests.MethodWithDynamic(dynamic value)",
+            "   at void Kawayi.Demystifier.Test.MethodTests.DemistifiesMethodWithDynamic()");
+
+        Assert.Equal(expected, trace);
+    }
+
+    [Fact]
+    public void DemistifiesMethodWithLambda()
+    {
+        Exception dex = null;
+        try
         {
-            Exception dex = null;
-            try
-            {
-                MethodWithLambda();
-            }
-            catch (Exception e)
-            {
-                dex = e.Demystify(StyleOptions.NoColorOption);
-            }
-
-            // Assert
-            var stackTrace = dex.ToString();
-            stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
-            var trace = string.Join(string.Empty, stackTrace.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
-
-            var expected = string.Join(string.Empty,
-                "System.ArgumentException: Value does not fall within the expected range.",
-                "   at void Kawayi.Demystifier.Test.MethodTests.MethodWithLambda()+() => { }",
-                "   at void Kawayi.Demystifier.Test.MethodTests.MethodWithLambda()",
-                "   at void Kawayi.Demystifier.Test.MethodTests.DemistifiesMethodWithLambda()");
-
-            Assert.Equal(expected, trace);
+            MethodWithLambda();
+        }
+        catch (Exception e)
+        {
+            dex = e.Demystify(StyleOptions.NoColorOption);
         }
 
-        [Fact]
-        public async Task DemistifiesMethodWithAsyncLambda()
+        // Assert
+        var stackTrace = dex.ToString();
+        stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
+        var trace = string.Join(string.Empty, stackTrace.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
+
+        var expected = string.Join(string.Empty,
+            "System.ArgumentException: Value does not fall within the expected range.",
+            "   at void Kawayi.Demystifier.Test.MethodTests.MethodWithLambda()+() => { }",
+            "   at void Kawayi.Demystifier.Test.MethodTests.MethodWithLambda()",
+            "   at void Kawayi.Demystifier.Test.MethodTests.DemistifiesMethodWithLambda()");
+
+        Assert.Equal(expected, trace);
+    }
+
+    [Fact]
+    public async Task DemistifiesMethodWithAsyncLambda()
+    {
+        Exception dex = null;
+        try
         {
-            Exception dex = null;
-            try
-            {
-                await MethodWithAsyncLambda();
-            }
-            catch (Exception e)
-            {
-                dex = e.Demystify(StyleOptions.NoColorOption);
-            }
-
-            // Assert
-            var stackTrace = dex.ToString();
-            stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
-            var trace = string.Join(string.Empty, stackTrace.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
-
-            var expected = string.Join(string.Empty,
-                "System.ArgumentException: Value does not fall within the expected range.",
-                "   at async Task Kawayi.Demystifier.Test.MethodTests.MethodWithAsyncLambda()+(?) => { }",
-                "   at async Task Kawayi.Demystifier.Test.MethodTests.MethodWithAsyncLambda()",
-                "   at async Task Kawayi.Demystifier.Test.MethodTests.DemistifiesMethodWithAsyncLambda()");
-
-            Assert.Equal(expected, trace);
+            await MethodWithAsyncLambda();
+        }
+        catch (Exception e)
+        {
+            dex = e.Demystify(StyleOptions.NoColorOption);
         }
 
-        private bool MethodWithNullableInt(int? number) => throw new ArgumentException();
+        // Assert
+        var stackTrace = dex.ToString();
+        stackTrace = LineEndingsHelper.RemoveLineEndings(stackTrace);
+        var trace = string.Join(string.Empty, stackTrace.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
 
-        private bool MethodWithDynamic(dynamic value) => throw new ArgumentException();
+        var expected = string.Join(string.Empty,
+            "System.ArgumentException: Value does not fall within the expected range.",
+            "   at async Task Kawayi.Demystifier.Test.MethodTests.MethodWithAsyncLambda()+(?) => { }",
+            "   at async Task Kawayi.Demystifier.Test.MethodTests.MethodWithAsyncLambda()",
+            "   at async Task Kawayi.Demystifier.Test.MethodTests.DemistifiesMethodWithAsyncLambda()");
 
-        private void MethodWithLambda()
+        Assert.Equal(expected, trace);
+    }
+
+    private bool MethodWithNullableInt(int? number) => throw new ArgumentException();
+
+    private bool MethodWithDynamic(dynamic value) => throw new ArgumentException();
+
+    private void MethodWithLambda()
+    {
+        Func<bool> action = () => throw new ArgumentException();
+        action();
+    }
+
+    private async Task MethodWithAsyncLambda()
+    {
+        Func<Task> action = async () =>
         {
-            Func<bool> action = () => throw new ArgumentException();
-            action();
-        }
+            await Task.CompletedTask;
+            throw new ArgumentException();
+        };
 
-        private async Task MethodWithAsyncLambda()
-        {
-            Func<Task> action = async () =>
-            {
-                await Task.CompletedTask;
-                throw new ArgumentException();
-            };
-
-            await action();
-        }
+        await action();
     }
 }

@@ -26,7 +26,7 @@ class Program
                 BackgroundColor = Color.Red,
                 IsBold = true,
                 IsUnderline = true
-            },"Original");
+            }, "Original");
             styled.AppendLine();
             styled.Append(ex.ToString());
 

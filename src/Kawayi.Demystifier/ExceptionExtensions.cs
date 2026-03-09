@@ -4,56 +4,55 @@
 using System.Reflection;
 using Kawayi.Demystifier.Enumerable;
 
-namespace Kawayi.Demystifier
+namespace Kawayi.Demystifier;
+
+public static class ExceptionExtensions
 {
-    public static class ExceptionExtensions
+    private static readonly FieldInfo? StackTraceString = typeof(Exception).GetField("_stackTraceString", BindingFlags.Instance | BindingFlags.NonPublic);
+
+    private static void SetStackTracesString(this Exception exception, string value)
+        => StackTraceString?.SetValue(exception, value);
+
+    /// <summary>
+    /// Demystifies the given <paramref name="exception"/> and tracks the original stack traces for the whole exception tree.
+    /// </summary>
+    public static T Demystify<T>(this T exception, StyleOptions? option = null) where T : Exception
     {
-        private static readonly FieldInfo? StackTraceString = typeof(Exception).GetField("_stackTraceString", BindingFlags.Instance | BindingFlags.NonPublic);
-
-        private static void SetStackTracesString(this Exception exception, string value)
-            => StackTraceString?.SetValue(exception, value);
-
-        /// <summary>
-        /// Demystifies the given <paramref name="exception"/> and tracks the original stack traces for the whole exception tree.
-        /// </summary>
-        public static T Demystify<T>(this T exception,StyleOptions? option = null) where T : Exception
+        option = option ?? StyleOptions.GlobalOption;
+        try
         {
-            option = option ?? StyleOptions.GlobalOption;
-            try
+            var stackTrace = new EnhancedStackTrace(exception);
+
+            if (stackTrace.FrameCount > 0)
             {
-                var stackTrace = new EnhancedStackTrace(exception);
-
-                if (stackTrace.FrameCount > 0)
-                {
-                    exception.SetStackTracesString(stackTrace.ToColoredString(option));
-                }
-
-                if (exception is AggregateException aggEx)
-                {
-                    foreach (var ex in EnumerableIList.Create(aggEx.InnerExceptions))
-                    {
-                        ex.Demystify(option);
-                    }
-                }
-
-                exception.InnerException?.Demystify(option);
-            }
-            catch
-            {
-                // Processing exceptions shouldn't throw exceptions; if it fails
+                exception.SetStackTracesString(stackTrace.ToColoredString(option));
             }
 
-            return exception;
+            if (exception is AggregateException aggEx)
+            {
+                foreach (var ex in EnumerableIList.Create(aggEx.InnerExceptions))
+                {
+                    ex.Demystify(option);
+                }
+            }
+
+            exception.InnerException?.Demystify(option);
+        }
+        catch
+        {
+            // Processing exceptions shouldn't throw exceptions; if it fails
         }
 
-        public static void PrintStyledDemystifiedString(this Exception exception,StyleOptions? option = null,TextWriter? writer = null)
-            => (writer ?? Console.Out)
-                .Write(new StyledStringBuilder().AppendDemystified(exception,
+        return exception;
+    }
+
+    public static void PrintStyledDemystifiedString(this Exception exception, StyleOptions? option = null, TextWriter? writer = null)
+        => (writer ?? Console.Out)
+            .Write(new StyledStringBuilder().AppendDemystified(exception,
                 option ?? StyleOptions.GlobalOption));
 
-        [System.Diagnostics.Contracts.Pure]
-        public static string ToStyledDemystifiedString(this Exception exception, StyleOptions? option = null)
-            => new StyledStringBuilder().AppendDemystified(exception,
-                option ?? StyleOptions.GlobalOption).ToString();
-    }
+    [System.Diagnostics.Contracts.Pure]
+    public static string ToStyledDemystifiedString(this Exception exception, StyleOptions? option = null)
+        => new StyledStringBuilder().AppendDemystified(exception,
+            option ?? StyleOptions.GlobalOption).ToString();
 }

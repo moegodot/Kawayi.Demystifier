@@ -1,45 +1,44 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Kawayi.Demystifier.Test
+namespace Kawayi.Demystifier.Test;
+
+public class InheritenceTests
 {
-    public class InheritenceTests
+    private abstract class BaseClass
     {
-        private abstract class BaseClass
+        public abstract Task<object> Method();
+    }
+
+    private class ImplClass : BaseClass
+    {
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public override Task<object> Method()
         {
-            public abstract Task<object> Method();
+            throw new Exception();
+        }
+    }
+
+    [Fact]
+    public async Task ImplementedAbstractMethodDoesNotThrow()
+    {
+        // Arrange
+        var instance = new ImplClass();
+
+        // Act
+        Exception exception = null;
+        try
+        {
+            await instance.Method();
+        }
+        catch (Exception ex)
+        {
+            exception = ex;
         }
 
-        private class ImplClass : BaseClass
-        {
-            [MethodImpl(MethodImplOptions.NoInlining)]
-            public override Task<object> Method()
-            {
-                throw new Exception();
-            }
-        }
-
-        [Fact]
-        public async Task ImplementedAbstractMethodDoesNotThrow()
-        {
-            // Arrange
-            var instance = new ImplClass();
-
-            // Act
-            Exception exception = null;
-            try
-            {
-                await instance.Method();
-            }
-            catch (Exception ex)
-            {
-                exception = ex;
-            }
-
-            // Act
-            var est = new EnhancedStackTrace(exception);
-        }
+        // Act
+        var est = new EnhancedStackTrace(exception);
     }
 }

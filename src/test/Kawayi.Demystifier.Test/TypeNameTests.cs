@@ -1,28 +1,27 @@
 using System;
 using Xunit;
 
-namespace Kawayi.Demystifier.Test
-{
-    public class TypeNameTests
-    {
-        [Fact]
-        public void NestedGenericTypes()
-        {
-            try
-            {
-                Throw(new Generic<(int, string)>.Nested());
-            }
-            catch (Exception ex)
-            {
-                var text = ex.ToStyledDemystifiedString();
-            }
-        }
+namespace Kawayi.Demystifier.Test;
 
-        private void Throw(Generic<(int a, string b)>.Nested nested) 
+public class TypeNameTests
+{
+    [Fact]
+    public void NestedGenericTypes()
+    {
+        try
         {
-            throw null;
+            Throw(new Generic<(int, string)>.Nested());
+        }
+        catch (Exception ex)
+        {
+            var text = ex.ToStyledDemystifiedString();
         }
     }
 
-    public static class Generic<T> { public struct Nested { } }
+    private void Throw(Generic<(int a, string b)>.Nested nested)
+    {
+        throw null;
+    }
 }
+
+public static class Generic<T> { public struct Nested { } }

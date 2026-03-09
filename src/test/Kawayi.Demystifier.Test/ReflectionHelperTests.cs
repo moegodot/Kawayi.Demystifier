@@ -2,26 +2,25 @@ using System;
 using Kawayi.Demystifier.Internal;
 using Xunit;
 
-namespace Kawayi.Demystifier.Test
+namespace Kawayi.Demystifier.Test;
+
+public class ReflectionHelperTest
 {
-    public class ReflectionHelperTest
+    [Fact]
+    public void IsValueTupleReturnsTrueForTupleWith1Element()
     {
-        [Fact]
-        public void IsValueTupleReturnsTrueForTupleWith1Element()
-        {
-            Assert.True(typeof(ValueTuple<int>).IsValueTuple());
-        }
+        Assert.True(typeof(ValueTuple<int>).IsValueTuple());
+    }
 
-        [Fact]
-        public void IsValueTupleReturnsTrueForTupleWith1ElementWithOpenedType()
-        {
-            Assert.True(typeof(ValueTuple<>).IsValueTuple());
-        }
+    [Fact]
+    public void IsValueTupleReturnsTrueForTupleWith1ElementWithOpenedType()
+    {
+        Assert.True(typeof(ValueTuple<>).IsValueTuple());
+    }
 
-        [Fact]
-        public void IsValueTupleReturnsTrueForTupleWith6ElementsWithOpenedType()
-        {
-            Assert.True(typeof(ValueTuple<,,,,,>).IsValueTuple());
-        }
+    [Fact]
+    public void IsValueTupleReturnsTrueForTupleWith6ElementsWithOpenedType()
+    {
+        Assert.True(typeof(ValueTuple<,,,,,>).IsValueTuple());
     }
 }

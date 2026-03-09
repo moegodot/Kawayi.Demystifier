@@ -1,10 +1,9 @@
-﻿// Copyright (c) Ben A Adams. All rights reserved.
+// Copyright (c) Ben A Adams. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-namespace Kawayi.Demystifier.Enumerable
+namespace Kawayi.Demystifier.Enumerable;
+
+interface IEnumerableIList<T> : IEnumerable<T>
 {
-    interface IEnumerableIList<T> : IEnumerable<T>
-    {
-        new EnumeratorIList<T> GetEnumerator();
-    }
+    new EnumeratorIList<T> GetEnumerator();
 }
