@@ -33,8 +33,6 @@ jobs:
         needs: build-and-test
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         runs-on: ubuntu-latest
-        outputs:
-            id: ${{ steps.upload.outputs.artifact-id }}
         steps:
             - uses: actions/checkout@v4
               with:
@@ -50,30 +48,15 @@ jobs:
                   dotnet pack -c Release \
                     --no-build \
                     --output ./packages
-            - name: Upload
+            - name: Upload to Artifact
               id: upload
               uses: actions/upload-artifact@v4
               with:
                   path: ./packages/*
-    deploy:
-        needs: pack-and-upload
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-        runs-on: ubuntu-latest
-        steps:
-            - name: Download artifacts
-              uses: actions/download-artifact@v5
-              with:
-                  artifact-ids: ${{ needs.pack-and-upload.outputs.id }}
-                  path: .
-            - name: Publish to NuGet
+            - name: Upload to Nuget
               run: |
-                  dotnet nuget push ./*.nupkg \
+                  dotnet nuget push ./packages/*.nupkg \
                     --api-key ${{ secrets.NUGET_API_KEY }} \
                     --source https://api.nuget.org/v3/index.json \
                     --skip-duplicate
-            - name: Publish Symbols
-              run: |
-                  dotnet nuget push ./*.snupkg \
-                    --api-key ${{ secrets.NUGET_API_KEY }} \
-                    --source https://api.nuget.org/v3/index.json \
-                    --skip-duplicate
+
