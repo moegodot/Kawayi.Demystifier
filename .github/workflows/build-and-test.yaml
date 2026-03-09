@@ -51,7 +51,6 @@ jobs:
             - name: Upload
               uses: actions/upload-artifact@v4
               with:
-                  name: nuget-packages
                   path: ./packages/*
     deploy:
         needs: pack-and-upload
@@ -61,7 +60,7 @@ jobs:
             - name: Download artifacts
               uses: actions/download-artifact@v5
               with:
-                  name: nuget-packages
+                  artifact-ids: ${{ needs.pack-and-upload.outputs.artifact-id }}
             - name: Publish to NuGet
               run: |
                   dotnet nuget push ./*.nupkg \
