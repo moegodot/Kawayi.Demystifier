@@ -68,7 +68,7 @@ public sealed class ToDemystifiedStringTests
             ex = e;
         }
 
-        var original = ex.ToString();
+        var original = ex.ToString().ReplaceLineEndings("\n");
         var endLine = (int)Math.Min((uint)original.IndexOf('\n'), original.Length);
 
         original = original.Substring(0, endLine);
